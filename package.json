@@ -1,14 +1,17 @@
 {
-  "name": "confirmobile",
+  "name": "digitimate",
   "version": "0.0.0",
   "description": "A service for confirming mobile numbers",
   "main": "index.coffee",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "engines" : {
+    "node" : ">=1.0.0"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/650Industries/confirmobile.git"
+    "url": "https://github.com/digitimate/digitimate.git"
   },
   "keywords": [
     "mobile",
@@ -20,9 +23,9 @@
   ],
   "author": "Charlie Cheever <ccheever@sixfivezero.net>",
   "bugs": {
-    "url": "https://github.com/650Industries/confirmobile/issues"
+    "url": "https://github.com/digitimate/digitimate/issues"
   },
-  "homepage": "https://github.com/650Industries/confirmobile",
+  "homepage": "https://github.com/digitimate/digitimate",
   "dependencies": {
     "co": "^4.5.1",
     "express": "^4.12.3",
