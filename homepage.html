@@ -58,26 +58,23 @@
           <div class="blog-post">
             <h2 class="blog-post-title">How to verify a mobile number in 3 easy steps</h2>
 
-            <h3>1. Get the client library from npm</h3>
 
-            <code>npm install --save digitimate</code>
-
-            <h3>2. Make a <code>sendCode</code> request to send a text to a user's phone</h3>
+            <h3>1. Make a <code>sendCode</code> request to send a text to a user's phone</h3>
 
             <p>Once the user has entered his or her phone number into your application, call this
             method to send a text to the user's phone that will contain a code they can type in
             to prove the phone number belongs to them.</p>
 
-            <code>http://localhost:3000/sendCode?appName=test&mobileNumber=650-521-6131</code>
+            <code>http://localhost:3000/sendCode?developerEmail=yourEmail@example.com&userMobileNumber=412-555-1212&message=Your%20app%20confirmation%20code:</code>
 
-            <h3>3. Make a <code>checkCode</code> request to verify the number</h3>
+            <h3>2. Make a <code>checkCode</code> request to verify the number</h3>
 
             <p>Once the user has entered in the code, send it back to our server for validation
             using the <code>checkCode</code> method. This will return a JSON object where
             <code>validCode</code> is either <code>true</code> if the code is valid and the
             mobile number is verified, or <code>false</code> if the code is incorrect.
 
-            <code>http://localhost:3000/checkCode?appName=test&mobileNumber=650-521-6131&code=123456</code>
+            <code>http://localhost:3000/sendCode?developerEmail=yourEmail@example.com&userMobileNumber=412-555-1212&code=123456</code>
 
 
 <!--
