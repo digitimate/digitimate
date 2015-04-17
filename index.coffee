@@ -14,6 +14,7 @@ instapromise = require 'instapromise'
   isString
 } = require 'lodash-node'
 timeconstants = require 'timeconstants'
+util = require 'util'
 
 r = require './r'
 secret = require './secret'
@@ -25,6 +26,7 @@ FROM_MOBILE_NUMBER = secret.twilio.fromNumber
 
 # This doesn't really validate e-mails but is a basic sanity check
 EMAIL_REGEX = /.+\@.+\..+/
+CUSTOM_MESSAGE_REGEX = new RegExp CUSTOM_MESSAGE_CODE_ESCAPE, 'g'
 
 app = express()
 
@@ -97,14 +99,14 @@ app.all '/sendCode', (req, res) ->
       res.status 500
       res.send JSON.stringify {
         success: false
-        err: "Server Error: #{ err }"
+        err: "Server Error: #{ util.format err }"
         userMobileNumber
       }
   .catch (err) ->
     res.status 500
     res.send JSON.stringify {
       success: false
-      err: "Server Error: #{ err }"
+      err: "Server Error: #{ util.format err }"
     }
 
 app.all '/checkCode', (req, res) ->
@@ -143,14 +145,14 @@ app.all '/checkCode', (req, res) ->
       res.status 500
       res.send {
         success: false
-        err: "Server Error: #{ err }"
+        err: "Server Error: #{ util.format err }"
         userMobileNumber
       }
   .catch (err) ->
     res.status 500
     res.send JSON.stringify {
       success: false
-      err: "Server Error: #{ err }"
+      err: "Server Error: #{ util.format err }"
     }
 
 
@@ -233,7 +235,7 @@ sendCodeAsync = co.wrap (opts) ->
   message ?= "Code:"
 
   if contains message, CUSTOM_MESSAGE_CODE_ESCAPE
-    messageToSend = message.replace CUSTOM_MESSAGE_CODE_ESCAPE, code
+    messageToSend = message.replace CUSTOM_MESSAGE_REGEX, code
   else
     messageToSend = "#{ message } #{ code }"
 
