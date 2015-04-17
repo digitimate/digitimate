@@ -3,22 +3,28 @@ An application that provides a service for confirming mobile numbers
 
 """
 
+assert = require 'assert'
 co = require 'co'
 express = require 'express'
 fs = require 'fs'
 instapromise = require 'instapromise'
 {
+  isBoolean
   isNaN
   isString
 } = require 'lodash-node'
 timeconstants = require 'timeconstants'
 
 r = require './r'
+secret = require './secret'
 twilio = require './twilio'
 
 DEFAULT_NUMBER_OF_DIGITS = 6
-FROM_MOBILE_NUMBER = '+1 650-479-1412'
 CUSTOM_MESSAGE_CODE_ESCAPE = '{CODE}'
+FROM_MOBILE_NUMBER = secret.twilio.fromNumber
+
+# This doesn't really validate e-mails but is a basic sanity check
+EMAIL_REGEX = /.+\@.+\..+/
 
 app = express()
 
@@ -29,7 +35,10 @@ app.get '/', (req, res) ->
       _homepageHtml = yield fs.promise.readFile './homepage.html', 'utf8'
     res.type 'text/html'
     res.send _homepageHtml
-  res.send
+  .catch (err) ->
+    res.status 500
+    res.send "Server Error: ", err
+
 
 _bootstrapCss = undefined
 app.get '/bootstrap.min.css', (req, res) ->
@@ -38,19 +47,23 @@ app.get '/bootstrap.min.css', (req, res) ->
       _bootstrapCss = yield fs.promise.readFile './bootstrap.min.css', 'utf8'
     res.type 'text/css'
     res.send _bootstrapCss
+  .catch (err) ->
+    res.status 500
+    res.send "Server Error: ", err
+
 
 app.all '/sendCode', (req, res) ->
   co ->
     res.type 'application/json'
 
     {
-      mobileNumber
+      userMobileNumber
       numberOfDigits
       message
-      appName
+      developerEmail
     } = req.query
 
-    console.log "Request to sendCode for app #{ appName } for #{ mobileNumber }"
+    console.log "Request to sendCode for '#{ developerEmail }' for #{ userMobileNumber }"
 
     badRequest = _badRequestFactory res
 
@@ -71,30 +84,36 @@ app.all '/sendCode', (req, res) ->
 
     try
       yield sendCodeAsync {
-        appName
+        developerEmail
         message
-        mobileNumber
+        userMobileNumber
         numberOfDigits
       }
       res.send JSON.stringify {
-        ok: true
-        mobileNumber
+        success: true
+        userMobileNumber
       }
     catch err
       res.status 500
       res.send JSON.stringify {
         success: false
         err: "Server Error: #{ err }"
-        mobileNumber
+        userMobileNumber
       }
+  .catch (err) ->
+    res.status 500
+    res.send JSON.stringify {
+      success: false
+      err: "Server Error: #{ err }"
+    }
 
 app.all '/checkCode', (req, res) ->
   co ->
     res.type 'application/json'
 
     {
-      mobileNumber
-      appName
+      userMobileNumber
+      developerEmail
       code
     } = req.query
 
@@ -109,23 +128,31 @@ app.all '/checkCode', (req, res) ->
       return badRequest "`code` must be provided"
 
     try
-      validCode = checkCodeAsync {
-        appName
+      validCode = yield checkCodeAsync {
+        developerEmail
         code
-        mobileNumber
+        userMobileNumber
       }
+      validCode = !!validCode
       res.send JSON.stringify {
         success: true
         validCode
-        mobileNumber
+        userMobileNumber
       }
     catch err
       res.status 500
       res.send {
         success: false
         err: "Server Error: #{ err }"
-        mobileNumber
+        userMobileNumber
       }
+  .catch (err) ->
+    res.status 500
+    res.send JSON.stringify {
+      success: false
+      err: "Server Error: #{ err }"
+    }
+
 
 _badRequestFactory = (res) ->
   """Returns a function that sends bad request responses"""
@@ -141,39 +168,42 @@ _badRequestFactory = (res) ->
 
 
 _basicValidateRequest = (badRequest, req) ->
-  """Validates `appName` and `mobileNumber`"""
+  """Validates `developerEmail` and `userMobileNumber`"""
 
   {
-    appName
-    mobileNumber
+    developerEmail
+    userMobileNumber
   } = req.query
 
-  unless isString appName
-    return badRequest "`appName` query paramter must be provided and be a string"
+  unless isString developerEmail
+    return badRequest "`developerEmail` query paramter must be provided and be a string"
 
-  unless appName.length >= 3
-    return badRequest "`appName` must be at least 3 characters long"
+  unless developerEmail.match EMAIL_REGEX
+    return badRequest "`developerEmail` doesn't look like an e-mail address!"
 
-  unless appName.length < 256
-    return badRequest "`appName` must be less than 256 characters long"
+  unless developerEmail.length >= 3
+    return badRequest "`developerEmail` must be at least 3 characters long"
 
-  unless isString mobileNumber
-    return badRequest "`mobileNumber` must be provided and be a string"
+  unless developerEmail.length < 256
+    return badRequest "`developerEmail` must be less than 256 characters long"
 
-  unless mobileNumber.length > 5
-    return badRequest "`mobileNumber` must be at least 5 digits long"
+  unless isString userMobileNumber
+    return badRequest "`userMobileNumber` must be provided and be a string"
 
-  unless mobileNumber.length < 100
-    return badRequest "`mobileNumber` must be less than 100 characters long"
+  unless userMobileNumber.length > 5
+    return badRequest "`userMobileNumber` must be at least 5 digits long"
+
+  unless userMobileNumber.length < 100
+    return badRequest "`userMobileNumber` must be less than 100 characters long"
 
   false
 
 
-sendSmsAsync = co.wrap (mobileNumber, message) ->
+sendSmsAsync = co.wrap (userMobileNumber, message) ->
   """Sends an SMS to a given number"""
 
   yield twilio.promise.sendMessage {
-    to: mobileNumber
+    to: userMobileNumber
     from: FROM_MOBILE_NUMBER
     body: message
   }
@@ -182,9 +212,9 @@ sendCodeAsync = co.wrap (opts) ->
   """Makes a code and sends it to a given number"""
 
   {
-    appName
+    developerEmail
     numberOfDigits
-    mobileNumber
+    userMobileNumber
     message
   } = opts
 
@@ -193,8 +223,8 @@ sendCodeAsync = co.wrap (opts) ->
   sentTime = Date.now()
 
   yield r.table('codes').insert({
-    appName
-    mobileNumber
+    developerEmail
+    userMobileNumber
     message
     code
     sentTime
@@ -208,14 +238,14 @@ sendCodeAsync = co.wrap (opts) ->
     messageToSend = "#{ message } #{ code }"
 
 
-  yield sendSmsAsync mobileNumber, messageToSend
+  yield sendSmsAsync userMobileNumber, messageToSend
 
 checkCodeAsync = co.wrap (opts) ->
   """Checks a code"""
 
   {
-    appName
-    mobileNumber
+    developerEmail
+    userMobileNumber
     code
     ip
   } = opts
@@ -224,9 +254,9 @@ checkCodeAsync = co.wrap (opts) ->
   anHourAgo = now - timeconstants.hour
 
   results = yield r.table('codes').filter({
-    appName
+    developerEmail
     code
-    mobileNumber
+    userMobileNumber
   })
 
   if (row = results[0])?
@@ -234,22 +264,22 @@ checkCodeAsync = co.wrap (opts) ->
       validCode = true
       try
         yield r.table('codes').filter({
-          appName
+          developerEmail
           code
-          mobileNumber
+          userMobileNumber
         }).update({used: true})
       catch
         # Just log this; we still want to say the code is valid
-        console.error "Failed to mark code '#{ code }' for mobile number #{ mobileNumber } on app '#{ appName }' as used"
+        console.error "Failed to mark code '#{ code }' for mobile number #{ userMobileNumber } for developer '#{ developerEmail }' as used"
     else
       validCode = false
 
   else
-    console.log "Failed attempt from #{ ip } for app '#{ appName }' for number #{ mobileNumber } with code #{ code }"
+    console.log "Failed attempt from #{ ip } for '#{ developerEmail }' for number #{ userMobileNumber } with code #{ code }"
     yield r.table('failedAttempts').insert({
-      appName
+      developerEmail
       code
-      mobileNumber
+      userMobileNumber
       attemptTime: now
       ip
     })
@@ -285,5 +315,6 @@ module.exports = {
   sendCodeAsync
   sendSmsAsync
   DEFAULT_NUMBER_OF_DIGITS
+  EMAIL_REGEX
   FROM_MOBILE_NUMBER
 }
