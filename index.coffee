@@ -75,8 +75,8 @@ app.all '/sendCode', (req, res) ->
       if isNaN numberOfDigits
         return badRequest "`numberOfDigits` must be a number"
       else
-        if numberOfDigits < 1
-          return badRequest "`numberOfDigits` must be at least 1"
+        if numberOfDigits < 3
+          return badRequest "`numberOfDigits` must be at least 3"
         else if numberOfDigits > 24
           return badRequest "`numberOfDigits` must be 24 or less"
     else
