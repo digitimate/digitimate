@@ -1,2 +1,2 @@
-# digitimate
-The legitimately easiest way to verify user mobile numbers
+# confirmobile
+Service for confirming mobile numbers

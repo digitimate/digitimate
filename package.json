@@ -1,0 +1,35 @@
+{
+  "name": "confirmobile",
+  "version": "0.0.0",
+  "description": "A service for confirming mobile numbers",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/650Industries/confirmobile.git"
+  },
+  "keywords": [
+    "mobile",
+    "confirm",
+    "verify",
+    "phonenumber",
+    "text",
+    "sms"
+  ],
+  "author": "Charlie Cheever <ccheever@sixfivezero.net>",
+  "bugs": {
+    "url": "https://github.com/650Industries/confirmobile/issues"
+  },
+  "homepage": "https://github.com/650Industries/confirmobile",
+  "dependencies": {
+    "co": "^4.5.1",
+    "express": "^4.12.3",
+    "instapromise": "^1.0.0",
+    "lodash-node": "^3.6.0",
+    "rethinkdbdash": "^2.0.1",
+    "timeconstants": "^1.0.1",
+    "twilio": "^1.11.1"
+  }
+}
