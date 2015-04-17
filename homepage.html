@@ -1,151 +1,173 @@
-<html>
-<head>
-<title>Digitimate - Verify mobile phone numbers in a flash</title>
-
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-
-<!-- Optional theme -->
-<link rel="stylesheet" href="bootstrap.min.css">
-
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
-
-</head>
 <body>
+  <!-- React/JSX -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.1/JSXTransformer.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.13.1/react-with-addons.js"></script>
 
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <!-- <a class="navbar-brand" href="#">Project Name</a> -->
+  <!-- Bootstrap -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+  <!-- Where React will render everything -->
+  <div id="react-container"></div>
+
+  <!-- React source for page -->
+  <script type="text/jsx">
+
+  var UrlWithParameters = React.createClass({
+    render: function () {
+      var base = window.location.origin;
+      var keys = Object.keys(this.props.paramValues || {});
+      var terms = [];
+      var errors = [];
+      for (var i = 0; i < keys.length; i++) {
+        var key = keys[i];
+        var val = this.props.paramValues[key];
+        var term = encodeURIComponent(key) + '=' + encodeURIComponent(val);
+        terms.push(term);
+        if (this.props.rows[i].requiredOptional == 'required') {
+          if (!val) {
+            errors.push("Missing required parameter: '" + key + "'");
+          }
+        }
+      }
+      var url = base + '/?' + (terms.join('&'));
+      return (
+        <div>
+          <code>{url}</code>
         </div>
-        <!--
-        <div id="navbar" class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right">
-            <div class="form-group">
-              <input type="text" placeholder="Email" class="form-control">
-            </div>
-            <div class="form-group">
-              <input type="password" placeholder="Password" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-success">Sign in</button>
-          </form>
+      );
+    }
+  });
+
+  var ParameterTableWithUrl = React.createClass({
+    render: function () {
+      return (
+        <div>
+          <table>
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Description</th>
+                <th>req/opt</th>
+                <th>Default</th>
+                <th>Try It!</th>
+              </tr>
+            </thead>
+            <tbody>
+              {this._renderRows(this.props.rows)}
+            </tbody>
+          </table>
+          <UrlWithParameters rows={this.props.rows} paramValues={this.state} />
         </div>
-        --><!--/.navbar-collapse -->
-      </div>
-    </nav>
+      );
+    },
 
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-      <div class="container">
-        <h1>Digitimate</h1>
-        <h2>The legitimately easiest solution for verifying user mobile numbers.<h2>
-        <p>Verify mobile numbers with one simple client library and two calls.</p>
-        <!-- <p><a class="btn btn-primary btn-lg" href="#" role="button">Learn more &raquo;</a></p> -->
-      </div>
-    </div>
+    _renderRows: function (rows) {
+      return rows.map(this._renderBodyRow);
+    },
 
-      <div class="row" style="margin-left: 100px;">
+    _renderBodyRow: function (row) {
+      var parameter = row.parameter;
+      var description = row.description;
+      var requiredOptional = row.requiredOptional;
+      var defaultValue = row.defaultValue;
+      return (
+        <tr>
+          <td className="parameter">{row.parameter}</td>
+          <td className="description">{row.description}</td>
+          <td className="requiredOptional">{row.requiredOptional}</td>
+          <td className="defaultValue">{row.defaultValue}</td>
+          <td className="tryIt"><input onChange={(function (event) {
+            var stateChange = {};
+            stateChange[row.parameter] = event.target.value;
+            this.setState(stateChange);
+          }).bind(this)} type="text" name={row.parameter} defaultValue={row.defaultValue || ''} /></td>
+        </tr>
+      );
+    },
 
-        <div class="col-sm-8 blog-main">
+  });
 
-          <div class="blog-post">
-            <h2 class="blog-post-title">How to verify a mobile number in two easy steps</h2>
+  var developerEmailRow = {
+    parameter: 'developerEmail',
+    description: 'Your e-mail address so we can contact you',
+    requiredOptional: 'required',
+  };
+  var userMobileNumberRow = {
+    parameter: 'userMobileNumber',
+    description: "The user's mobile number",
+    requiredOptional: 'required',
+  };
 
+  var Header = React.createClass({
+    render: function () {
+      return (
+        <div>
+          <h1>Digitimate</h1>
+          <h3>The legitimately easiest way to verify user{"'"}s mobile numbers via SMS in two easy steps</h3>
+        </div>
+      );
+    },
+  });
 
-            <h3>1. Make a <code>sendCode</code> request to send a text to a user's phone</h3>
+  var Body = React.createClass({
+    render: function () {
+      return (
+        <div>
+          <h2>No signup required. Free. Open source.</h2>
+          <p>You don{"'"}t need to create an account or signup anywhere to get started; just include your e-mail
+            in the <code>developerEmail</code> parameter on your requests.</p>
+          <p>You can verify your first 30,000 users using Digitimate for free. After that, we{"'"}ll work with you
+            to charge something that covers our costs.</p>
+          <p>Or if you prefer, you can run the service yourself. The code is open source and available <a href="https://github.com/digitimate/digitimate">on GitHub</a>.</p>
+          <h2>Step 1: Send an SMS to a user using a <code>sendCode</code> request</h2>
+          <p>When a user enters their mobile number into your app, just send an HTTP request to Digitimate that looks
+            like this</p>
+          <ParameterTableWithUrl rows={[
+            developerEmailRow,
+            userMobileNumberRow,
+            {
+              parameter: 'message',
+              description: 'A custom message format for the SMS sent to the user',
+              requiredOptional: 'optional',
+              defaultValue: 'Code: ',
+            },
+            {
+              parameter: 'numberOfDigits',
+              description: 'The number of digits in the code to send',
+              requiredOptional: 'optional',
+              defaultValue: '6',
+            },
+          ]}/>
 
-            <p>Once the user has entered his or her phone number into your application, call this
-            method to send a text to the user's phone that will contain a code they can type in
-            to prove the phone number belongs to them.</p>
+          <h2>Step 2: Check that the user has entered the correct code with a <code>checkCode</code> request</h2>
+          <p>When the user has gotten the SMS and entered the code, send an HTTP request to Digitimate that looks like this</p>
+          <ParameterTableWithUrl rows={[
+            developerEmailRow,
+            userMobileNumberRow,
+            {
+              parameter: 'code',
+              description: 'The code the user entered to check against the one we sent to the user via SMS',
+              requiredOptional: 'required',
+            }
+          ]}/>
+        </div>
+      );
+    },
+  });
 
-            <code>http://localhost:3000/sendCode?developerEmail=yourEmail@example.com&userMobileNumber=412-555-1212&message=Your%20app%20confirmation%20code:</code>
-
-            <h3>2. Make a <code>checkCode</code> request to verify the number</h3>
-
-            <p>Once the user has entered in the code, send it back to our server for validation
-            using the <code>checkCode</code> method. This will return a JSON object where
-            <code>validCode</code> is either <code>true</code> if the code is valid and the
-            mobile number is verified, or <code>false</code> if the code is incorrect.
-
-            <code>http://localhost:3000/sendCode?developerEmail=yourEmail@example.com&userMobileNumber=412-555-1212&code=123456</code>
-
-
-<!--
-            <p>This blog post shows a few different types of content that's supported and styled with Bootstrap. Basic typography, images, and code are all supported.</p>
-            <hr>
-            <p>Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.</p>
-            <blockquote>
-              <p>Curabitur blandit tempus porttitor. <strong>Nullam quis risus eget urna mollis</strong> ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-            </blockquote>
-            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-            <h2>Heading</h2>
-            <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-            <h3>Sub-heading</h3>
-            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
-            <pre><code>Example code block</code></pre>
-            <p>Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.</p>
-            <h3>Sub-heading</h3>
-            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-            <ul>
-              <li>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</li>
-              <li>Donec id elit non mi porta gravida at eget metus.</li>
-              <li>Nulla vitae elit libero, a pharetra augue.</li>
-            </ul>
-            <p>Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue.</p>
-            <ol>
-              <li>Vestibulum id ligula porta felis euismod semper.</li>
-              <li>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</li>
-              <li>Maecenas sed diam eget risus varius blandit sit amet non magna.</li>
-            </ol>
-            <p>Cras mattis consectetur purus sit amet fermentum. Sed posuere consectetur est at lobortis.</p>
-
-          </div>--><!-- /.blog-post -->
-
-<!--
-          <div class="blog-post">
-            <h2 class="blog-post-title">Another blog post</h2>
-            <p class="blog-post-meta">December 23, 2013 by <a href="#">Jacob</a></p>
-
-            <p>Cum sociis natoque penatibus et magnis <a href="#">dis parturient montes</a>, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.</p>
-            <blockquote>
-              <p>Curabitur blandit tempus porttitor. <strong>Nullam quis risus eget urna mollis</strong> ornare vel eu leo. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-            </blockquote>
-            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-            <p>Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros.</p>
-          </div>--><!-- /.blog-post -->
-
-<!--
-          <div class="blog-post">
-            <h2 class="blog-post-title">New feature</h2>
-            <p class="blog-post-meta">December 14, 2013 by <a href="#">Chris</a></p>
-
-            <p>Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean lacinia bibendum nulla sed consectetur. Etiam porta sem malesuada magna mollis euismod. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-            <ul>
-              <li>Praesent commodo cursus magna, vel scelerisque nisl consectetur et.</li>
-              <li>Donec id elit non mi porta gravida at eget metus.</li>
-              <li>Nulla vitae elit libero, a pharetra augue.</li>
-            </ul>
-            <p>Etiam porta <em>sem malesuada magna</em> mollis euismod. Cras mattis consectetur purus sit amet fermentum. Aenean lacinia bibendum nulla sed consectetur.</p>
-            <p>Donec ullamcorper nulla non metus auctor fringilla. Nulla vitae elit libero, a pharetra augue.</p>
-          </div>--><!-- /.blog-post -->
-        </div><!-- /.blog-main -->
-      </div><!-- /.row -->
-
-
-      <hr>
-
-      <footer>
-        <p>&copy; 2015</p>
-      </footer>
-    </div> <!-- /container -->
-
-
+  var Page = React.createClass({
+    render: function () {
+      return (
+        <div>
+          <Header />
+          <Body />
+        </div>
+      );
+    },
+  });
+  React.render(<Page />, document.getElementById('react-container'));
+  </script>
 </body>
-</html>

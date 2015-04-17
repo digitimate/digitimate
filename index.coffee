@@ -37,6 +37,7 @@ app.get '/', (req, res) ->
       _homepageHtml = yield fs.promise.readFile './homepage.html', 'utf8'
     res.type 'text/html'
     res.send _homepageHtml
+    _homepageHtml = null # No caching while we're developing
   .catch (err) ->
     res.status 500
     res.send "Server Error: ", err
