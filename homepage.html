@@ -5,14 +5,22 @@
 
   <!-- Bootstrap -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
+  <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">-->
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">-->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
   <style>
   .jsonResponse {
     font-family: Courier New, Fixed-width;
     width: 80%;
+  }
+  .doc {
+    border-collapse: collapse;
+    border-width: 1px 1px 1px 1px;
+    border-color: #aaaaaa;
+    border-style: solid;
+    padding: 5px 5px 5px 5px;
   }
   </style>
 
@@ -120,11 +128,11 @@
       var defaultValue = row.defaultValue;
       return (
         <tr key={row.parameter}>
-          <td key="parameter" className="parameter">{row.parameter}</td>
-          <td key="description" className="description">{row.description}</td>
-          <td key="requiredOptional" className="requiredOptional">{row.requiredOptional}</td>
-          <td key="defaultValue" className="defaultValue">{row.defaultValue}</td>
-          <td key="tryIt" className="tryIt"><input onChange={(function (event) {
+          <td key="parameter" className="parameter doc">{row.parameter}</td>
+          <td key="description" className="description doc">{row.description}</td>
+          <td key="requiredOptional" className="requiredOptional doc">{row.requiredOptional}</td>
+          <td key="defaultValue" className="defaultValue doc">{row.defaultValue}</td>
+          <td key="tryIt" className="tryIt doc"><input onChange={(function (event) {
             var stateChange = {};
             stateChange[row.parameter] = event.target.value;
             this.setState(stateChange);
