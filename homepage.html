@@ -9,6 +9,13 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 
+  <style>
+  .jsonResponse {
+    font-family: Courier New, Fixed-width;
+    width: 80%;
+  }
+  </style>
+
   <!-- Where React will render everything -->
   <div id="react-container"></div>
 
@@ -16,6 +23,12 @@
   <script type="text/jsx">
 
   var UrlWithParameters = React.createClass({
+
+    getInitialState: function () {
+      return {
+        responseData: null,
+      };
+    },
 
     render: function () {
       var base = window.location.origin;
@@ -40,13 +53,35 @@
           <code>{url}</code>
           <p><input type="submit" value=" Try it " onClick={(function () {
             console.log("Try it: " + url);
-            $.getJSON(url, function (data) {
-              console.log("data=", data);
-            });
+            this.setState({responseData: null});
+            $.ajax({
+              type: 'GET',
+              dataType: 'json',
+              url: url,
+              success: (function (data) {
+                  console.log("responseData=", data);
+                  this.setState({responseData: data});
+                }).bind(this),
+              error: (function (err) {
+                  console.error("GET failed", err);
+                  this.setState({responseData: JSON.parse(err.responseText)});
+                }).bind(this),
+              });
           }).bind(this)} className="tryItButton" /></p>
+          <JSONResponse response={this.state.responseData} />
         </div>
       );
     }
+  });
+
+  var JSONResponse = React.createClass({
+    render: function () {
+      return (
+        <p>
+          {this.props.response && (<textarea className="jsonResponse" value={JSON.stringify(this.props.response)} />) || null}
+        </p>
+      );
+    },
   });
 
   var ParameterTableWithUrl = React.createClass({
@@ -84,12 +119,12 @@
       var requiredOptional = row.requiredOptional;
       var defaultValue = row.defaultValue;
       return (
-        <tr>
-          <td className="parameter">{row.parameter}</td>
-          <td className="description">{row.description}</td>
-          <td className="requiredOptional">{row.requiredOptional}</td>
-          <td className="defaultValue">{row.defaultValue}</td>
-          <td className="tryIt"><input onChange={(function (event) {
+        <tr key={row.parameter}>
+          <td key="parameter" className="parameter">{row.parameter}</td>
+          <td key="description" className="description">{row.description}</td>
+          <td key="requiredOptional" className="requiredOptional">{row.requiredOptional}</td>
+          <td key="defaultValue" className="defaultValue">{row.defaultValue}</td>
+          <td key="tryIt" className="tryIt"><input onChange={(function (event) {
             var stateChange = {};
             stateChange[row.parameter] = event.target.value;
             this.setState(stateChange);

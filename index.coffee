@@ -23,12 +23,16 @@ twilio = require './twilio'
 DEFAULT_NUMBER_OF_DIGITS = 6
 CUSTOM_MESSAGE_CODE_ESCAPE = '{CODE}'
 FROM_MOBILE_NUMBER = secret.twilio.fromNumber
+PORT = secret?.sever?.port ? 3000
 
 # This doesn't really validate e-mails but is a basic sanity check
 EMAIL_REGEX = /.+\@.+\..+/
 CUSTOM_MESSAGE_REGEX = new RegExp CUSTOM_MESSAGE_CODE_ESCAPE, 'g'
 
 app = express()
+
+logError = (err) ->
+  console.error "Server Error: ", err
 
 _homepageHtml = undefined
 app.get '/', (req, res) ->
@@ -39,6 +43,7 @@ app.get '/', (req, res) ->
     res.send _homepageHtml
     _homepageHtml = null # No caching while we're developing
   .catch (err) ->
+    logError err
     res.status 500
     res.send "Server Error: ", err
 
@@ -51,6 +56,7 @@ app.get '/bootstrap.min.css', (req, res) ->
     res.type 'text/css'
     res.send _bootstrapCss
   .catch (err) ->
+    logError err
     res.status 500
     res.send "Server Error: ", err
 
@@ -97,6 +103,7 @@ app.all '/sendCode', (req, res) ->
         userMobileNumber
       }
     catch err
+      logError err
       res.status 500
       res.send JSON.stringify {
         success: false
@@ -104,6 +111,7 @@ app.all '/sendCode', (req, res) ->
         userMobileNumber
       }
   .catch (err) ->
+    logError err
     res.status 500
     res.send JSON.stringify {
       success: false
@@ -143,6 +151,7 @@ app.all '/checkCode', (req, res) ->
         userMobileNumber
       }
     catch err
+      logError err
       res.status 500
       res.send {
         success: false
@@ -150,6 +159,7 @@ app.all '/checkCode', (req, res) ->
         userMobileNumber
       }
   .catch (err) ->
+    logError err
     res.status 500
     res.send JSON.stringify {
       success: false
@@ -302,7 +312,7 @@ makeCode = (numberOfDigits=DEFAULT_NUMBER_OF_DIGITS) ->
 
 
 if require.main is module
-  server = app.listen 3000, ->
+  server = app.listen PORT, ->
     host = server.address().address
     port = server.address().port
     console.log "Listening on http://%s:%s", host, port
