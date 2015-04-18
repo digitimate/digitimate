@@ -16,6 +16,7 @@
   <script type="text/jsx">
 
   var UrlWithParameters = React.createClass({
+
     render: function () {
       var base = window.location.origin;
       var keys = Object.keys(this.props.paramValues || {});
@@ -32,10 +33,17 @@
           }
         }
       }
-      var url = base + '/?' + (terms.join('&'));
+      var url = base + '/' + this.props.apiMethod + '?' + (terms.join('&'));
+
       return (
         <div>
           <code>{url}</code>
+          <p><input type="submit" value=" Try it " onClick={(function () {
+            console.log("Try it: " + url);
+            $.getJSON(url, function (data) {
+              console.log("data=", data);
+            });
+          }).bind(this)} className="tryItButton" /></p>
         </div>
       );
     }
@@ -59,7 +67,9 @@
               {this._renderRows(this.props.rows)}
             </tbody>
           </table>
-          <UrlWithParameters rows={this.props.rows} paramValues={this.state} />
+          <p>
+            <UrlWithParameters rows={this.props.rows} paramValues={this.state} apiMethod={this.props.apiMethod} />
+          </p>
         </div>
       );
     },
@@ -125,7 +135,7 @@
           <h2>Step 1: Send an SMS to a user using a <code>sendCode</code> request</h2>
           <p>When a user enters their mobile number into your app, just send an HTTP request to Digitimate that looks
             like this</p>
-          <ParameterTableWithUrl rows={[
+          <ParameterTableWithUrl apiMethod="sendCode" rows={[
             developerEmailRow,
             userMobileNumberRow,
             {
@@ -144,7 +154,7 @@
 
           <h2>Step 2: Check that the user has entered the correct code with a <code>checkCode</code> request</h2>
           <p>When the user has gotten the SMS and entered the code, send an HTTP request to Digitimate that looks like this</p>
-          <ParameterTableWithUrl rows={[
+          <ParameterTableWithUrl apiMethod="checkCode" rows={[
             developerEmailRow,
             userMobileNumberRow,
             {
