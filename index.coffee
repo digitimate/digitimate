@@ -55,6 +55,7 @@ app.get '/bootstrap.min.css', (req, res) ->
       _bootstrapCss = yield fs.promise.readFile './bootstrap.min.css', 'utf8'
     res.type 'text/css'
     res.send _bootstrapCss
+    _bootstrapCss = null
   .catch (err) ->
     logError err
     res.status 500

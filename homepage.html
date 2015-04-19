@@ -5,7 +5,7 @@
 
   <!-- Bootstrap -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-  <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">-->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
   <link rel="stylesheet" href="bootstrap.min.css">
   <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap-theme.min.css">-->
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
@@ -15,12 +15,17 @@
     font-family: Courier New, Fixed-width;
     width: 80%;
   }
-  .doc {
-    border-collapse: collapse;
-    border-width: 1px 1px 1px 1px;
-    border-color: #aaaaaa;
+  .tryIt {
+    background: #fffcfa;
+  }
+  code {
+    background: transparent;
+    color: #004488;
+  }
+  .url {
+    border-color: #dddddd;
     border-style: solid;
-    padding: 5px 5px 5px 5px;
+    border-width: 1px 1px 1px 1px;
   }
   </style>
 
@@ -31,10 +36,14 @@
   <script type="text/jsx">
 
   var UrlWithParameters = React.createClass({
+    componentDidMount: function () {
+      window._UrlWithParameters = this;
+    },
 
     getInitialState: function () {
       return {
         responseData: null,
+        responseState: null,
       };
     },
 
@@ -58,25 +67,37 @@
 
       return (
         <div>
-          <code>{url}</code>
+          <h4>URL</h4>
+          <p>
+            <code className="urlInput">{url}</code>
+          </p>
           <p><input type="submit" value=" Try it " onClick={(function () {
-            console.log("Try it: " + url);
-            this.setState({responseData: null});
+            this.setState({responseData: null, responseState: 'sending'});
             $.ajax({
               type: 'GET',
               dataType: 'json',
               url: url,
               success: (function (data) {
                   console.log("responseData=", data);
-                  this.setState({responseData: data});
+                  this.setState({responseData: data, responseState: 'success', });
                 }).bind(this),
               error: (function (err) {
                   console.error("GET failed", err);
-                  this.setState({responseData: JSON.parse(err.responseText)});
+                  var responseData;
+                  try {
+                    responseData = JSON.parse(err.responseText);
+                  } catch (e) {
+                    try {
+                      responseData = JSON.parse(err);
+                    } catch (e) {
+                      responseData = err;
+                    }
+                  }
+                  this.setState({responseData: responseData, responseState: 'error', });
                 }).bind(this),
               });
           }).bind(this)} className="tryItButton" /></p>
-          <JSONResponse response={this.state.responseData} />
+          <JSONResponse response={this.state.responseData} responseState={this.state.responseState} />
         </div>
       );
     }
@@ -84,11 +105,45 @@
 
   var JSONResponse = React.createClass({
     render: function () {
-      return (
-        <p>
-          {this.props.response && (<textarea className="jsonResponse" value={JSON.stringify(this.props.response)} />) || null}
-        </p>
-      );
+      window._JSONResponse = this;
+      if (this.props.responseState === null) {
+        return <p></p>;
+      } else {
+        var responseDescription = null;
+        switch (this.props.responseState) {
+          case 'sending':
+            responseDescription = (
+              <div className="alert alert-info">
+                <strong>Sending...</strong>
+              </div>
+            );
+            break;
+
+          case 'error':
+            responseDescription = (
+              <div className="alert alert-danger">
+                <strong>Error!</strong>
+              </div>
+            );
+            break;
+
+          case 'success':
+            responseDescription = (
+              <div className="alert alert-success">
+                <strong>Success.</strong>
+              </div>
+            );
+            break;
+
+        }
+        return (
+          <div>
+            <h4>Response</h4>
+            {responseDescription}
+            <textarea className="jsonResponse" readOnly={true} value={this.props.response && (JSON.stringify(this.props.response)) || null} />
+          </div>
+        );
+      }
     },
   });
 
@@ -96,7 +151,7 @@
     render: function () {
       return (
         <div>
-          <table>
+          <table className="table">
             <thead>
               <tr>
                 <th>Parameter</th>
@@ -157,7 +212,7 @@
   var Header = React.createClass({
     render: function () {
       return (
-        <div>
+        <div className="jumbotron">
           <h1>Digitimate</h1>
           <h3>The legitimately easiest way to verify user{"'"}s mobile numbers via SMS in two easy steps</h3>
         </div>
@@ -169,13 +224,16 @@
     render: function () {
       return (
         <div>
+        <div className="row">
           <h2>No signup required. Free. Open source.</h2>
           <p>You don{"'"}t need to create an account or signup anywhere to get started; just include your e-mail
             in the <code>developerEmail</code> parameter on your requests.</p>
           <p>You can verify your first 30,000 users using Digitimate for free. After that, we{"'"}ll work with you
             to charge something that covers our costs.</p>
           <p>Or if you prefer, you can run the service yourself. The code is open source and available <a href="https://github.com/digitimate/digitimate">on GitHub</a>.</p>
-          <h2>Step 1: Send an SMS to a user using a <code>sendCode</code> request</h2>
+        </div>
+        <div className="row">
+          <h2><strong>Step 1:</strong> Send an SMS to a user using a <code>sendCode</code> request</h2>
           <p>When a user enters their mobile number into your app, just send an HTTP request to Digitimate that looks
             like this</p>
           <ParameterTableWithUrl apiMethod="sendCode" rows={[
@@ -194,8 +252,10 @@
               defaultValue: '6',
             },
           ]}/>
+        </div>
 
-          <h2>Step 2: Check that the user has entered the correct code with a <code>checkCode</code> request</h2>
+        <div className="row">
+          <h2><strong>Step 2:</strong> Check that the user has entered the correct code with a <code>checkCode</code> request</h2>
           <p>When the user has gotten the SMS and entered the code, send an HTTP request to Digitimate that looks like this</p>
           <ParameterTableWithUrl apiMethod="checkCode" rows={[
             developerEmailRow,
@@ -207,6 +267,7 @@
             }
           ]}/>
         </div>
+        </div>
       );
     },
   });
@@ -214,8 +275,10 @@
   var Page = React.createClass({
     render: function () {
       return (
-        <div>
-          <Header />
+        <div className="container">
+          <div className="row">
+            <Header />
+          </div>
           <Body />
         </div>
       );
