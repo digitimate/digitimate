@@ -203,7 +203,7 @@ _basicValidateRequest = (badRequest, req) ->
   } = req.query
 
   unless isString developerEmail
-    return badRequest "`developerEmail` query paramter must be provided and be a string"
+    return badRequest "`developerEmail` query parameter must be provided and be a string"
 
   unless developerEmail.match EMAIL_REGEX
     return badRequest "`developerEmail` doesn't look like an e-mail address!"
