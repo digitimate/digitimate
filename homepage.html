@@ -276,6 +276,54 @@
     },
   });
 
+  var Faq = React.createClass({
+    render: function () {
+      var code = '{CODE}';
+      return (
+        <div className="row">
+          <h2>Frequently Asked Questions</h2>
+          <ol>
+            <li>
+              <h4>How much does this cost?</h4>
+              <p>It{"'"}s free, up to 30,000 users. If you verify more than 30,000 users, we{"'"}ll need to charge you
+              something to cover the costs.</p>
+            </li>
+            <li>
+              <h4>How can I customize the verification code sent to a user?</h4>
+              <p>In the <code>message</code> parameter of a <code>sendCode</code> request, if you include the string <code>{code}</code> anywhere, the numeric code will be inserted at those locations instead of being
+              appended to the end of the message.</p>
+              <p>You could do multiple replacements, so you could create a message like:
+              <pre>Your confirmation code is {code}.<br />
+              Or use this link yourapp://validate-mobile-number/{code}</pre></p>
+            </li>
+            <li>
+              <h4>What about abuse?</h4>
+              <p>We{"'"}ll monitor the database and react to any abuse and put safeguards in place.</p>
+            </li>
+            <li>
+              <h4>Is the code open source?</h4>
+              <p>Yes. It is available on GitHub here: <a href="https://github.com/digitimate/digitimate">https://github.com/digitimate/digitimate</a>
+              </p>
+            </li>
+            <li>
+              <h4>How is "digitimate" pronounced?</h4>
+              <p>It rhymes with "legitimate", so dij-it-a-mitt</p>
+            </li>
+          </ol>
+          <h6><small>©2015- Nametag</small></h6>
+        </div>
+      );
+    },
+    _renderQuestion: function (question) {
+      return (
+        <li>
+          <h4>{question.question}</h4>
+          <p>{question.answer}</p>
+        </li>
+      );
+    },
+  });
+
   var Page = React.createClass({
     render: function () {
       return (
@@ -284,6 +332,7 @@
             <Header />
           </div>
           <Body />
+          <Faq />
         </div>
       );
     },
