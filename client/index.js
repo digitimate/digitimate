@@ -47,17 +47,13 @@ var _makeApiCallAsync = function (method, args) {
         url = checkCodeUrl(args);
         break;
     }
-    console.log("url=", url);
     request.post(url, {}, function (err, response, body) {
       if (err) {
         reject(err);
       } else {
-        console.log("body=", body);
         try {
           var responseObj = JSON.parse(body);
         } catch (e) {
-          console.log("body=", body);
-          console.log("e=", e);
           reject(e);
         }
         resolve(responseObj);
