@@ -1,0 +1,24 @@
+{
+  "name": "digitimate",
+  "version": "1.0.0",
+  "description": "A client for the Digitimate phone number verification service",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "digitimate",
+    "mobile",
+    "sms",
+    "phonenumber",
+    "phone",
+    "verification",
+    "verify",
+    "code"
+  ],
+  "author": "Charlie Cheever <ccheever@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "request": "^2.55.0"
+  }
+}
