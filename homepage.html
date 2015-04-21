@@ -140,11 +140,28 @@
             break;
 
         }
+        var validCodeDescription = null;
+        if (this.props.response && this.props.response.validCode === false) {
+          validCodeDescription = (
+            <div className="alert alert-danger">
+              Invalid code!
+            </div>
+          );
+        }
+        if (this.props.response && this.props.response.validCode === true) {
+          validCodeDescription = (
+            <div className="alert alert-success">
+              Valid code!
+            </div>
+          );
+        }
+
         return (
           <div>
             <h4>Response</h4>
             {responseDescription}
             <textarea className="jsonResponse" readOnly={true} value={this.props.response && (JSON.stringify(this.props.response)) || null} />
+            <p style={{marginTop: '1.5em;'}}>{validCodeDescription}</p>
           </div>
         );
       }
@@ -155,20 +172,22 @@
     render: function () {
       return (
         <div>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Parameter</th>
-                <th>Description</th>
-                <th>req/opt</th>
-                <th>Default</th>
-                <th>Try It!</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this._renderRows(this.props.rows)}
-            </tbody>
-          </table>
+          <form>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Parameter</th>
+                  <th>Description</th>
+                  <th>req/opt</th>
+                  <th>Default</th>
+                  <th>Try It!</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this._renderRows(this.props.rows)}
+              </tbody>
+            </table>
+          </form>
           <p>
             <UrlWithParameters rows={this.props.rows} paramValues={this.state} apiMethod={this.props.apiMethod} />
           </p>
@@ -195,6 +214,9 @@
             var stateChange = {};
             stateChange[row.parameter] = event.target.value;
             this.setState(stateChange);
+            $("input [name='" + row.parameter + "']").each(function (x) {
+              x.val(event.target.value);
+            });
           }).bind(this)} type="text" name={row.parameter} defaultValue={row.defaultValue || ''} /></td>
         </tr>
       );
