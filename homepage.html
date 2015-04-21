@@ -325,7 +325,19 @@
             </li>
             <li>
               <h4>Are there client libraries I can use for this?</h4>
-              <p>Not yet, but there will likely be ones for iOS and JavaScript. Feel free to submit a pull request or
+              <p>There is a JavaScript client. You can use it like this:</p>
+              <p>
+                <pre>npm install --save digitimate</pre>
+                <pre>
+                  var digitimate = require('digitimate');<br />
+                  var promise = digitimate.sendCodeAsync({"{"}<br />
+                    &nbsp;&nbsp;developerEmail: 'digitimate@example.com',<br />
+                    &nbsp;&nbsp;userMobileNumber: '412-362-7589',<br />
+                    &nbsp;&nbsp;code: 'Your confirmation code is {"{"}CODE{"}"}',<br />
+                  {"}"});<br />
+                </pre>
+              </p>
+              <p>Not yet, but there will likely be ones for iOS (Obj-C) as well. Feel free to submit a pull request or
               just let us know if you build one.</p>
             </li>
             <li>
