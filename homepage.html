@@ -327,6 +327,18 @@
               <p>We{"'"}ll monitor the database and react to any abuse and put safeguards in place as necessary.</p>
             </li>
             <li>
+              <h4>What if a user puts in an invalid phone number?</h4>
+              <p>We don{"'"}t do any validation of phone numbers at all beyond making sure they are least 5 digits long.
+              Whatever number that is put in will be sent to Twilio.</p>
+            </li>
+            <li>
+              <h4>Is there any normalization of phone numbers?</h4>
+              <p>No. None at this time.</p>
+              <p>Importantly, this means that the <code>userMobileNumber</code> that is used in a <code>sendCode</code>
+              call must match the <code>userMobileNumber</code> used in the corresponding <code>checkCode</code> call <i>exactly</i>, since <code>+1 412 555-1212</code> is different from <code>4125551212</code> to Digitimate
+              even though they are in some sense the same "phone number".</p>
+            </li>
+            <li>
               <h4>Is the code open source?</h4>
               <p>Yes. It is available on GitHub here: <a href="https://github.com/digitimate/digitimate">https://github.com/digitimate/digitimate</a>
               </p>
