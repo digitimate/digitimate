@@ -55,8 +55,13 @@ var _makeApiCallAsync = function (method, args) {
           var responseObj = JSON.parse(body);
         } catch (e) {
           reject(e);
+          return;
         }
-        resolve(responseObj);
+        if (responseObj.success === false) {
+          reject(new Error(responseObj.err || "Error response from server"));
+        } else {
+          resolve(responseObj);
+        }
       }
     });
   });
