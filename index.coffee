@@ -60,21 +60,6 @@ app.get '/', (req, res) ->
     res.status 500
     res.send "Server Error: ", err
 
-
-_bootstrapCss = undefined
-app.get '/bootstrap.min.css', (req, res) ->
-  co ->
-    unless _bootstrapCss?
-      _bootstrapCss = yield fs.promise.readFile './bootstrap.min.css', 'utf8'
-    res.type 'text/css'
-    res.send _bootstrapCss
-    _bootstrapCss = null
-  .catch (err) ->
-    logError err
-    res.status 500
-    res.send "Server Error: ", err
-
-
 app.all '/sendCode', (req, res) ->
   co ->
     res.type 'application/json'

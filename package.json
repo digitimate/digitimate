@@ -1,5 +1,5 @@
 {
-  "name": "digitimate",
+  "name": "digitimate-server",
   "version": "0.0.0",
   "description": "A service for confirming mobile numbers",
   "main": "index.coffee",
