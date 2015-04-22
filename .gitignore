@@ -30,3 +30,10 @@ node_modules
 _secret.coffee
 _secret.js
 host.ip
+
+
+# C# things....
+client/cs/DigitimateClient/packages
+client/cs/DigitimateClient/DigitimateClient.v12.suo
+client/cs/DigitimateClient/DigitimateClient/obj
+client/cs/DigitimateClient/DigitimateClient/bin
