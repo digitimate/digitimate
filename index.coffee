@@ -97,14 +97,14 @@ app.all '/sendCode', (req, res) ->
         userMobileNumber
         numberOfDigits
       }
-      res.send JSON.stringify {
+      res.send {
         success: true
         userMobileNumber
       }
     catch err
       logError err
       res.status 500
-      res.send JSON.stringify {
+      res.send {
         success: false
         err: "Server Error: #{ util.format err }"
         userMobileNumber
@@ -112,10 +112,14 @@ app.all '/sendCode', (req, res) ->
   .catch (err) ->
     logError err
     res.status 500
-    res.send JSON.stringify {
+    res.send {
       success: false
       err: "Server Error: #{ util.format err }"
     }
+
+app.get '/status', (req, res) ->
+  res.type 'application/json'
+  res.send status: 'ok'
 
 app.all '/checkCode', (req, res) ->
   co ->
@@ -144,7 +148,7 @@ app.all '/checkCode', (req, res) ->
         userMobileNumber
       }
       validCode = !!validCode
-      res.send JSON.stringify {
+      res.send {
         success: true
         validCode
         userMobileNumber
@@ -160,7 +164,7 @@ app.all '/checkCode', (req, res) ->
   .catch (err) ->
     logError err
     res.status 500
-    res.send JSON.stringify {
+    res.send {
       success: false
       err: "Server Error: #{ util.format err }"
     }
@@ -172,7 +176,7 @@ _badRequestFactory = (res) ->
   badRequest = (message) ->
     console.log "Bad Request: #{ message }"
     res.status 400
-    res.send JSON.stringify {
+    res.send {
       success: false
       err: "Bad Request: #{ message }"
     }
