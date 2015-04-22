@@ -214,7 +214,7 @@ _basicValidateRequest = (badRequest, req) ->
 sendSmsAsync = co.wrap (userMobileNumber, message) ->
   """Sends an SMS to a given number"""
 
-  yield twilio.promise.sendMessage {
+  yield return twilio.promise.sendMessage {
     to: userMobileNumber
     from: FROM_MOBILE_NUMBER
     body: message
@@ -250,7 +250,7 @@ sendCodeAsync = co.wrap (opts) ->
     messageToSend = "#{ message } #{ code }"
 
 
-  yield sendSmsAsync userMobileNumber, messageToSend
+  yield return sendSmsAsync userMobileNumber, messageToSend
 
 checkCodeAsync = co.wrap (opts) ->
   """Checks a code"""
