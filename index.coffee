@@ -97,15 +97,15 @@ app.all '/sendCode', (req, res) ->
         userMobileNumber
         numberOfDigits
       }
+
       res.send {
-        success: true
+        err: null
         userMobileNumber
       }
     catch err
       logError err
       res.status 500
       res.send {
-        success: false
         err: "Server Error: #{ util.format err }"
         userMobileNumber
       }
@@ -113,7 +113,6 @@ app.all '/sendCode', (req, res) ->
     logError err
     res.status 500
     res.send {
-      success: false
       err: "Server Error: #{ util.format err }"
     }
 
@@ -149,7 +148,7 @@ app.all '/checkCode', (req, res) ->
       }
       validCode = !!validCode
       res.send {
-        success: true
+        err: null
         validCode
         userMobileNumber
       }
@@ -157,7 +156,6 @@ app.all '/checkCode', (req, res) ->
       logError err
       res.status 500
       res.send {
-        success: false
         err: "Server Error: #{ util.format err }"
         userMobileNumber
       }
@@ -165,7 +163,6 @@ app.all '/checkCode', (req, res) ->
     logError err
     res.status 500
     res.send {
-      success: false
       err: "Server Error: #{ util.format err }"
     }
 
@@ -177,7 +174,6 @@ _badRequestFactory = (res) ->
     console.log "Bad Request: #{ message }"
     res.status 400
     res.send {
-      success: false
       err: "Bad Request: #{ message }"
     }
     true
