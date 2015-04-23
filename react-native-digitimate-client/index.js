@@ -81,7 +81,7 @@
  };
 
  var checkCodeAsync = function (args) {
-   return _makeApiCallAsync('checkCode', args);
+   return _makeApiCallAsync('checkCode', args).then((response) => response.validCode);
  };
 
  module.exports = {

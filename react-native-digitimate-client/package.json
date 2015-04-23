@@ -1,6 +1,6 @@
 {
   "name": "react-native-digitimate-client",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A React Native client for Digitimate (http://digitimate.com/)",
   "main": "index.js",
   "scripts": {
