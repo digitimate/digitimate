@@ -1,13 +1,13 @@
 {
   "name": "digitimate-server",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A service for confirming mobile numbers",
   "main": "index.coffee",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "engines" : {
-    "node" : ">=1.0.0"
+  "engines": {
+    "node": ">=1.0.0"
   },
   "repository": {
     "type": "git",
@@ -21,15 +21,19 @@
     "text",
     "sms"
   ],
-  "author": "Charlie Cheever <ccheever@sixfivezero.net>",
+  "authors": [
+    "Charlie Cheever <ccheever@sixfivezero.net>",
+    "James Ide <ide@sixfivezero.net>"
+  ],
   "bugs": {
     "url": "https://github.com/digitimate/digitimate/issues"
   },
   "homepage": "https://github.com/digitimate/digitimate",
   "dependencies": {
     "co": "^4.5.1",
-    "express": "^4.12.3",
     "instapromise": "^1.0.0",
+    "koa": "^0.19.1",
+    "koa-router": "^4.3.2",
     "lodash-node": "^3.7.0",
     "rethinkdbdash": "^2.0.1",
     "timeconstants": "^1.0.1",

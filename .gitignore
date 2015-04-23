@@ -26,7 +26,10 @@ build/Release
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
 
-# secret configuraion
+# OS X
+.DS_Store
+
+# secret configuration
 _secret.coffee
 _secret.js
 host.ip

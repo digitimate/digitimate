@@ -1,6 +1,6 @@
 twilio = require 'twilio'
 
-secret = require './secret'
+secret = require '../secret'
 {
   AccountSID
   AuthToken
