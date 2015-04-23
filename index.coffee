@@ -23,7 +23,7 @@ twilio = require './twilio'
 DEFAULT_NUMBER_OF_DIGITS = 6
 CUSTOM_MESSAGE_CODE_ESCAPE = '{CODE}'
 FROM_MOBILE_NUMBER = secret.twilio.fromNumber
-PORT = secret?.sever?.port ? 3000
+PORT = secret.server?.port ? 3000
 
 # This doesn't really validate e-mails but is a basic sanity check
 EMAIL_REGEX = /.+\@.+\..+/
