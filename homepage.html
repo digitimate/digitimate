@@ -325,20 +325,75 @@
             </li>
             <li>
               <h4>Are there client libraries I can use for this?</h4>
-              <p>There is a JavaScript client. You can use it like this:</p>
-              <p>
-                <pre>npm install --save digitimate</pre>
-                <pre>
-                  var digitimate = require('digitimate');<br />
-                  var promise = digitimate.sendCodeAsync({"{"}<br />
-                    &nbsp;&nbsp;developerEmail: 'digitimate@example.com',<br />
-                    &nbsp;&nbsp;userMobileNumber: '412-555-1212',<br />
-                    &nbsp;&nbsp;code: 'Your confirmation code is {"{"}CODE{"}"}',<br />
-                  {"}"});<br />
-                </pre>
-              </p>
-              <p>Not yet, but there will likely be ones for iOS (Obj-C) as well. Feel free to submit a pull request or
-              just let us know if you build one.</p>
+              <p>There are a few client libraries</p>
+              <ul>
+                <li>
+                  <h5>JavaScript</h5>
+                  <p>
+                    <pre>npm install --save digitimate</pre>
+                    <pre>
+                      var digitimate = require('digitimate');<br />
+                      digitimate.sendCodeAsync({"{"}<br />
+                        &nbsp;&nbsp;developerEmail: 'digitimate@example.com',<br />
+                        &nbsp;&nbsp;userMobileNumber: '412-555-1212',<br />
+                        &nbsp;&nbsp;message: 'Your confirmation code is {"{"}CODE{"}"}',<br />
+                      {"}"}).then(console.log, console.error);<br />
+                      <br />
+                      digitimate.checkCodeAsync({"{"}<br />
+                        &nbsp;&nbsp;developerEmail: 'digitimate@example.com',<br />
+                        &nbsp;&nbsp;userMobileNumber: '412-555-1212',<br />
+                        &nbsp;&nbsp;code: '123456',<br />
+                      {"}"}).then(function (isValid) {"{"}<br />
+                          &nbsp;&nbsp;&nbsp;&nbsp;if (isValid) {"{"}<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log("The phone number is now validated.");<br />
+                          &nbsp;&nbsp;&nbsp;&nbsp;{"} else {"}<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.warn("That code was incorrect");<br />
+                          &nbsp;&nbsp;&nbsp;&nbsp;{"}"}<br />
+                        &nbsp;&nbsp;{"}"});<br />
+                    </pre>
+                  </p>
+                </li>
+                <li>
+                  <h5>React Native</h5>
+                  <p>
+                    <pre>npm install --save react-native-digitimate-client</pre>
+                    <pre>
+                      var digitimate = require('digitimate');<br />
+                      digitimate.sendCodeAsync({"{"}<br />
+                        &nbsp;&nbsp;developerEmail: 'digitimate@example.com',<br />
+                        &nbsp;&nbsp;userMobileNumber: '412-555-1212',<br />
+                        &nbsp;&nbsp;message: 'Your confirmation code is {"{"}CODE{"}"}',<br />
+                      {"}"}).then(console.log, console.error);<br />
+                      <br />
+                      digitimate.checkCodeAsync({"{"}<br />
+                        &nbsp;&nbsp;developerEmail: 'digitimate@example.com',<br />
+                        &nbsp;&nbsp;userMobileNumber: '412-555-1212',<br />
+                        &nbsp;&nbsp;code: '123456',<br />
+                      {"}"}).then(function (isValid) {"{"}<br />
+                          &nbsp;&nbsp;&nbsp;&nbsp;if (isValid) {"{"}<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log("The phone number is now validated.");<br />
+                          &nbsp;&nbsp;&nbsp;&nbsp;{"} else {"}<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.warn("That code was incorrect");<br />
+                          &nbsp;&nbsp;&nbsp;&nbsp;{"}"}<br />
+                        &nbsp;&nbsp;{"}"});<br />
+                    </pre>
+                  </p>
+                </li>
+                <li>
+                  <h5>Objective-C</h5>
+                  <p>An officially supported Objective-C client is <a href="https://github.com/digitimate/digitimate/issues/7">planned...</a></p>
+                  <p>Feel free to jump in and build that if you like.</p>
+                </li>
+                <li>
+                  <h5>C#</h5>
+                  <p><a href="https://github.com/jacob-ebey">jacob-ebey</a> developed <a href="https://github.com/jacob-ebey/DigitimateSharp">DigitimateSharp</a>.
+                  </p>
+                </li>
+                <li>
+                  <h5>Others</h5>
+                  <p>Let us know (by <a href="https://github.com/digitimate/digitimate/issues/new">filing a Github issue</a>) if you create a client for another platform and I{"'"}ll link to it here.</p>
+                </li>
+              </ul>
             </li>
             <li>
               <h4>Can the codes be reused?</h4>
