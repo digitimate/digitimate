@@ -1,0 +1,31 @@
+{
+  "name": "react-native-digitimate-client",
+  "version": "1.0.0",
+  "description": "A React Native client for Digitimate (http://digitimate.com/)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/digitimate/digitimate.git"
+  },
+  "keywords": [
+    "digitimate",
+    "mobile",
+    "number",
+    "phonenumber",
+    "phone",
+    "sms",
+    "verification",
+    "verify",
+    "code",
+    "check"
+  ],
+  "author": "Charlie Cheever <ccheever@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/digitimate/digitimate/issues"
+  },
+  "homepage": "https://github.com/digitimate/digitimate#readme"
+}

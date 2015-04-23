@@ -57,8 +57,8 @@ var _makeApiCallAsync = function (method, args) {
           reject(e);
           return;
         }
-        if (responseObj.success === false) {
-          reject(new Error(responseObj.err || "Error response from server"));
+        if (responseObj.err != null) {
+          reject(new Error(responseObj.err));
         } else {
           resolve(responseObj);
         }
@@ -68,11 +68,11 @@ var _makeApiCallAsync = function (method, args) {
 };
 
 var sendCodeAsync = function (args) {
-  return _makeApiCallAsync('sendCode', args);
+  return _makeApiCallAsync("sendCode", args);
 };
 
 var checkCodeAsync = function (args) {
-  return _makeApiCallAsync('checkCode', args);
+  return _makeApiCallAsync("checkCode", args);
 };
 
 module.exports = {
