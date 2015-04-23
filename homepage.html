@@ -328,32 +328,6 @@
               <p>There are a few client libraries</p>
               <ul>
                 <li>
-                  <h5>JavaScript</h5>
-                  <p>
-                    <pre>npm install --save digitimate</pre>
-                    <pre>
-                      var digitimate = require('digitimate');<br />
-                      digitimate.sendCodeAsync({"{"}<br />
-                        &nbsp;&nbsp;developerEmail: 'digitimate@example.com',<br />
-                        &nbsp;&nbsp;userMobileNumber: '412-555-1212',<br />
-                        &nbsp;&nbsp;message: 'Your confirmation code is {"{"}CODE{"}"}',<br />
-                      {"}"}).then(console.log, console.error);<br />
-                      <br />
-                      digitimate.checkCodeAsync({"{"}<br />
-                        &nbsp;&nbsp;developerEmail: 'digitimate@example.com',<br />
-                        &nbsp;&nbsp;userMobileNumber: '412-555-1212',<br />
-                        &nbsp;&nbsp;code: '123456',<br />
-                      {"}"}).then(function (isValid) {"{"}<br />
-                          &nbsp;&nbsp;&nbsp;&nbsp;if (isValid) {"{"}<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log("The phone number is now validated.");<br />
-                          &nbsp;&nbsp;&nbsp;&nbsp;{"} else {"}<br />
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.warn("That code was incorrect");<br />
-                          &nbsp;&nbsp;&nbsp;&nbsp;{"}"}<br />
-                        &nbsp;&nbsp;{"}"});<br />
-                    </pre>
-                  </p>
-                </li>
-                <li>
                   <h5>React Native</h5>
                   <p>
                     <pre>npm install --save react-native-digitimate-client</pre>
@@ -387,6 +361,32 @@
                 <li>
                   <h5>C#</h5>
                   <p><a href="https://github.com/jacob-ebey">jacob-ebey</a> developed <a href="https://github.com/jacob-ebey/DigitimateSharp">DigitimateSharp</a>.
+                  </p>
+                </li>
+                <li>
+                  <h5>Node/io.js</h5>
+                  <p>
+                    <pre>npm install --save digitimate</pre>
+                    <pre>
+                      var digitimate = require('digitimate');<br />
+                      digitimate.sendCodeAsync({"{"}<br />
+                        &nbsp;&nbsp;developerEmail: 'digitimate@example.com',<br />
+                        &nbsp;&nbsp;userMobileNumber: '412-555-1212',<br />
+                        &nbsp;&nbsp;message: 'Your confirmation code is {"{"}CODE{"}"}',<br />
+                      {"}"}).then(console.log, console.error);<br />
+                      <br />
+                      digitimate.checkCodeAsync({"{"}<br />
+                        &nbsp;&nbsp;developerEmail: 'digitimate@example.com',<br />
+                        &nbsp;&nbsp;userMobileNumber: '412-555-1212',<br />
+                        &nbsp;&nbsp;code: '123456',<br />
+                      {"}"}).then(function (isValid) {"{"}<br />
+                          &nbsp;&nbsp;&nbsp;&nbsp;if (isValid) {"{"}<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.log("The phone number is now validated.");<br />
+                          &nbsp;&nbsp;&nbsp;&nbsp;{"} else {"}<br />
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;console.warn("That code was incorrect");<br />
+                          &nbsp;&nbsp;&nbsp;&nbsp;{"}"}<br />
+                        &nbsp;&nbsp;{"}"});<br />
+                    </pre>
                   </p>
                 </li>
                 <li>
