@@ -71,6 +71,8 @@ app.all '/sendCode', (req, res) ->
       developerEmail
     } = req.query
 
+    ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress
+
     console.log "Request to sendCode for '#{ developerEmail }' for #{ userMobileNumber }"
 
     badRequest = _badRequestFactory res
@@ -96,6 +98,7 @@ app.all '/sendCode', (req, res) ->
         message
         userMobileNumber
         numberOfDigits
+        ip
       }
 
       res.send {
@@ -145,6 +148,7 @@ app.all '/checkCode', (req, res) ->
         developerEmail
         code
         userMobileNumber
+        ip
       }
       validCode = !!validCode
       res.send {
@@ -228,6 +232,7 @@ sendCodeAsync = co.wrap (opts) ->
     numberOfDigits
     userMobileNumber
     message
+    ip
   } = opts
 
   numberOfDigits ?= DEFAULT_NUMBER_OF_DIGITS
@@ -240,6 +245,7 @@ sendCodeAsync = co.wrap (opts) ->
     message
     code
     sentTime
+    ip
   })
 
   message ?= "Code:"
@@ -279,7 +285,7 @@ checkCodeAsync = co.wrap (opts) ->
           developerEmail
           code
           userMobileNumber
-        }).update({used: true})
+        }).update({used: true, usedIp: ip})
       catch
         # Just log this; we still want to say the code is valid
         console.error "Failed to mark code '#{ code }' for mobile number #{ userMobileNumber } for developer '#{ developerEmail }' as used"
