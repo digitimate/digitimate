@@ -1,5 +1,5 @@
 getStatusAsync = (next) ->
-  @type = 'json'
   @body = status: 'ok'
+  yield return
 
 module.exports = getStatusAsync

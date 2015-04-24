@@ -13,8 +13,6 @@ homepageAsync = (next) ->
   if process.env.NODE_ENV isnt 'production'
     _cachedHtml = null
 
-  yield next
-
 readHtmlAsync = (config) ->
   htmlPath = path.join __dirname, '../site/homepage.html'
   html = yield fs.promise.readFile htmlPath, 'utf8'
