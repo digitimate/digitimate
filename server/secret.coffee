@@ -13,11 +13,12 @@ example =
 
 
 try
-  _secret = require './_secret'
+  _secret = require '../_secret'
   module.exports = _secret
 catch err
+
   if err.message.match /^Cannot find module/
-    console.error "Define a configuration file with your secret tokens for Twilio, your database, etc. in `./_secret.coffee`"
+    console.error "Define a configuration file with your secret tokens for Twilio, your database, etc. in `_secret.coffee`"
     module.exports = example
   else
     throw err

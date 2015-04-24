@@ -2,7 +2,7 @@
   "name": "digitimate-server",
   "version": "0.0.1",
   "description": "A service for confirming mobile numbers",
-  "main": "index.coffee",
+  "main": "server/index.coffee",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -40,5 +40,10 @@
     "rethinkdbdash": "^2.0.1",
     "timeconstants": "^1.0.1",
     "twilio": "^2.0.0"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.9.2",
+    "gulp": "^3.8.11",
+    "gulp-util": "^3.0.4"
   }
 }
