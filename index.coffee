@@ -4,6 +4,7 @@ An application that provides a service for confirming mobile numbers
 """
 
 koa = require 'koa'
+cors = require 'koa-cors'
 gzip = require 'koa-gzip'
 router = require 'koa-router'
 
@@ -28,6 +29,10 @@ app.use siteRouter.routes()
 app.use siteRouter.allowedMethods()
 
 apiRouter = router()
+apiRouter.use cors
+  origin: '*'
+  methods: ['GET', 'POST']
+  headers: ['X-Forwarded-For']
 apiRouter.use formatApiErrors
 apiRouter.all '/sendCode', require('./routes/codes').sendCodeAsync
 apiRouter.all '/checkCode', require('./routes/codes').checkCodeAsync
