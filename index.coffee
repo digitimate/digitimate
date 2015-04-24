@@ -21,11 +21,18 @@ app.use (next) ->
   @state.config = secret
   yield next
 
-app.use router app
-app.get '/', require './routes/home'
-app.get '/status', require './routes/status'
-app.all '/sendCode', formatApiErrors, require('./routes/codes').sendCodeAsync
-app.all '/checkCode', formatApiErrors, require('./routes/codes').checkCodeAsync
+siteRouter = router()
+siteRouter.get '/', require './routes/home'
+siteRouter.get '/status', require './routes/status'
+app.use siteRouter.routes()
+app.use siteRouter.allowedMethods()
+
+apiRouter = router()
+apiRouter.use formatApiErrors
+apiRouter.all '/sendCode', require('./routes/codes').sendCodeAsync
+apiRouter.all '/checkCode', require('./routes/codes').checkCodeAsync
+app.use apiRouter.routes()
+app.use apiRouter.allowedMethods()
 
 if require.main is module
   port = secret?.server?.port ? 3000
