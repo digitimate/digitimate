@@ -82,11 +82,9 @@
               dataType: 'json',
               url: url,
               success: (function (data) {
-                  console.log("responseData=", data);
                   this.setState({responseData: data, responseState: 'success', });
                 }).bind(this),
               error: (function (err) {
-                  console.error("GET failed", err);
                   var responseData;
                   try {
                     responseData = JSON.parse(err.responseText);
@@ -357,6 +355,35 @@
                   <h5>Objective-C</h5>
                   <p>An officially supported Objective-C client is <a href="https://github.com/digitimate/digitimate/issues/7">planned...</a></p>
                   <p>Feel free to jump in and build that if you like.</p>
+                </li>
+                <li>
+                  <h5>Web Browser JavaScript</h5>
+                  <p>
+                    Copy <a href="https://github.com/digitimate/digitimate/blob/master/browser-client/digitimate.min.js">this
+                    JavaScript file</a> into your project and include a <code>&lt;script&gt;</code> tag that references it.
+                  </p>
+                  <p>
+                    To use it on your webpage, include code like this:
+                    <pre>
+{"\
+Digitimate.sendCodeAsync({\n\
+  developerEmail: 'YOUR_EMAIL@example.com',\n\
+  userMobileNumber: 'YOUR_MOBILE_NUMBER',\n\
+}).then(handleSuccess, handleError);\n\
+"}
+                    </pre>
+                    and
+                    <pre>
+{"\
+Digitimate.checkCodeAsync({\n\
+  developerEmail: 'YOUR_EMAIL@example.com',\n\
+  userMobileNumber: 'YOUR_MOBILE_NUMBER',\n\
+  code: 'THE_CODE_YOU_GOT_AS_A_STRING',\n\
+}).then(handleSuccess, handleError);\n\
+"}
+                    </pre>
+                  </p>
+                  <p>In the future, this JavaScript will be posted to a CDN that you can reference.</p>
                 </li>
                 <li>
                   <h5>C#</h5>
