@@ -1,0 +1,27 @@
+<script src="./digitimate.js"></script>
+<script>
+function getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+}
+var developerEmail = getParameterByName("developerEmail") || "YOUR_EMAIL@example.com";
+var userMobileNumber = getParameterByName("userMobileNumber") || "YOUR_MOBILE_NUMBER";
+var code = getParameterByName("code") || "THE_CODE_YOU_GOT_AS_A_STRING";
+var consoleLog = function(x){console.log(x);}
+var consoleError = function(x){console.error(x);}
+
+</script>
+<p>Open the console and try <pre>
+  Digitimate.sendCodeAsync({
+    developerEmail: <script>document.write(JSON.stringify(developerEmail));</script>,
+    userMobileNumber: <script>document.write(JSON.stringify(userMobileNumber));</script>,
+  }).then(consoleLog, consoleError);
+</pre> and <pre>
+  Digitimate.checkCodeAsync({
+    developerEmail: <script>document.write(JSON.stringify(developerEmail));</script>,
+    userMobileNumber: <script>document.write(JSON.stringify(userMobileNumber));</script>,
+    code: <script>document.write(JSON.stringify(code));</script>,
+  }).then(consoleLog, consoleError);
+</pre>
