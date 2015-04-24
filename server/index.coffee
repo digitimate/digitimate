@@ -6,6 +6,7 @@ An application that provides a service for confirming mobile numbers
 koa = require 'koa'
 cors = require 'koa-cors'
 gzip = require 'koa-gzip'
+logger = require 'koa-logger'
 router = require 'koa-router'
 
 formatApiErrors = require './response/formatApiErrors'
@@ -16,6 +17,7 @@ app = koa()
 app.name = 'Digitimate'
 app.proxy = true
 
+app.use(logger())
 app.use(gzip())
 
 app.use (next) ->

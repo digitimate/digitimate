@@ -35,6 +35,7 @@
     "koa": "^0.19.1",
     "koa-cors": "0.0.14",
     "koa-gzip": "^0.1.0",
+    "koa-logger": "^1.2.2",
     "koa-router": "^4.3.2",
     "lodash-node": "^3.7.0",
     "rethinkdbdash": "^2.0.1",
