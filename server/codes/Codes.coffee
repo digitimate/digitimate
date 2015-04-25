@@ -18,6 +18,7 @@ sendCodeAsync = co.wrap (ctx, options) ->
     numberOfDigits
     userMobileNumber
     message
+    ip
   } = options
 
   numberOfDigits ?= DEFAULT_NUMBER_OF_DIGITS
@@ -29,6 +30,7 @@ sendCodeAsync = co.wrap (ctx, options) ->
     message
     code
     sentTime: new Date
+    ip
   }
 
   message ?= 'Code:'
