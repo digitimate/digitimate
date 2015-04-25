@@ -29,7 +29,7 @@ sendCodeAsync = co.wrap (ctx, options) ->
     userMobileNumber
     message
     code
-    sentTime: new Date
+    sentTime: r.now()
     ip
   }
 
