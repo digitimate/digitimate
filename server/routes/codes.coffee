@@ -22,6 +22,7 @@ exports.sendCodeAsync = (next) ->
     userMobileNumber
     message
     numberOfDigits
+    __testing__
   } = @query
 
   validateStandardRequest @
@@ -37,21 +38,27 @@ exports.sendCodeAsync = (next) ->
   else
     numberOfDigits = DEFAULT_NUMBER_OF_DIGITS
 
-  receipt = yield Codes.sendCodeAsync @, {
+  test = __testing__ isnt undefined
+
+  code = yield Codes.sendCodeAsync @, {
     developerEmail
     userMobileNumber
     numberOfDigits
     message
     ip: @ip
+    test
   }
 
   @body = { userMobileNumber }
+  if test
+    @body.__testing__ = { code }
 
 exports.checkCodeAsync = (next) ->
   {
     userMobileNumber
     developerEmail
     code
+    __testing__
   } = @query
 
   validateStandardRequest @
@@ -63,11 +70,14 @@ exports.checkCodeAsync = (next) ->
   if code.length > 24
     @throw 400, "`code` must be less than 24 characters long"
 
+  test = __testing__ isnt undefined
+
   validCode = yield Codes.checkCodeAsync @, {
     developerEmail
     userMobileNumber
     code
     ip: @ip
+    test
   }
 
   @body = { validCode }

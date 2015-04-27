@@ -19,6 +19,7 @@ sendCodeAsync = co.wrap (ctx, options) ->
     userMobileNumber
     message
     ip
+    test
   } = options
 
   numberOfDigits ?= DEFAULT_NUMBER_OF_DIGITS
@@ -31,6 +32,7 @@ sendCodeAsync = co.wrap (ctx, options) ->
     code
     sentTime: r.now()
     ip
+    test
   }
 
   message ?= 'Code:'
@@ -39,7 +41,11 @@ sendCodeAsync = co.wrap (ctx, options) ->
   else
     messageToSend = "#{ message } #{ code }"
 
-  yield return sendSmsAsync ctx, userMobileNumber, messageToSend
+  if not test
+    yield sendSmsAsync ctx, userMobileNumber, messageToSend
+  else
+    yield sendTestSmsAsync ctx, userMobileNumber, messageToSend
+  return code
 
 checkCodeAsync = co.wrap (ctx, options) ->
   """Checks a code sent to a given number"""
@@ -48,6 +54,7 @@ checkCodeAsync = co.wrap (ctx, options) ->
     userMobileNumber
     code
     ip
+    test
   } = options
 
   result = yield r.table('codes').filter({
@@ -56,6 +63,7 @@ checkCodeAsync = co.wrap (ctx, options) ->
     code
   }).filter(r.row('sentTime').gt(r.now().sub(CODE_LIFETIME_SECONDS)))
     .filter(r.not(r.row('used').default(false)))
+    .filter(r.row('test').default(false).eq(test))
     .update({used: true, usedIp: ip})
 
   if result.errors > 0
@@ -78,14 +86,30 @@ sendSmsAsync = co.wrap (ctx, userMobileNumber, message) ->
   """Sends an SMS to a given number"""
 
   try
-    yield Twilio.promise.sendMessage
+    client = Twilio.getClient()
+    yield client.promise.sendMessage
       to: userMobileNumber
       from: secret.twilio.fromNumber
       body: message
   catch error
-    ctx.throw error.status, error.message,
-      twilioCode: error.code
-      twilioMoreInfo: error.moreInfo
+    throwTwilioError ctx, error
+
+sendTestSmsAsync = co.wrap (ctx, userMobileNumber, message) ->
+  """Simulates sending an SMS to a given number without actually sending one"""
+
+  try
+    client = Twilio.getTestClient()
+    yield client.promise.sendMessage
+      to: userMobileNumber
+      from: secret.twilio.testing.fromNumber
+      body: message
+  catch error
+    throwTwilioError ctx, error
+
+throwTwilioError = (ctx, error) ->
+  ctx.throw error.status, error.message,
+    twilioCode: error.code
+    twilioMoreInfo: error.moreInfo
 
 makeCode = (numberOfDigits) ->
   """Generates a new code `numberOfDigits` digits long"""
