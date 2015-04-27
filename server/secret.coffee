@@ -6,7 +6,7 @@ example =
     testing:
       AccountSID: 'AC_YOUR_TWILIO_TEST_CREDENTIALS_ACCOUNT_SID'
       AuthToken: 'YOUR_TWILIO_TEST_CREDENTIALS_AUTH_TOKEN'
-      fromNumber: '+1 500-555-0006'
+      fromNumber: '+15005550006'
 
   rethinkdb:
     discovery: false
