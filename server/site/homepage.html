@@ -322,9 +322,22 @@
               any bug reports or questions or pull requests or feature requests!</p>
             </li>
             <li>
+              <h4>How can I use this securely?</h4>
+              <p>You should not make the API calls from your client application unless you have some kind
+                of additional authentication scheme on top of this; otherwise, clients can just spoof
+                having verified a phone number.</p>
+              <p>Instead, <b>the easiest way to use this service correctly is to make calls to Digitimate
+              from your server, not the client application</b>. So, when a user enters a phone number into
+              their phone or onto your website, you should make an API call to your server that tells
+              Digitimate to send the code, and then when the user enters the code, the client should tell
+              your server to check the code, and then your server can record that your user has a given
+              number.</p>
+            </li>
+            <li>
               <h4>Are there client libraries I can use for this?</h4>
               <p>There are a few client libraries</p>
               <ul>
+                {/*
                 <li>
                   <h5>React Native</h5>
                   <p>
@@ -384,14 +397,7 @@ Digitimate.checkCodeAsync({\n\
                   </p>
                   <p>In the future, this JavaScript will be posted to a CDN that you can reference.</p>
                 </li>
-                <li>
-                  <h5>C#</h5>
-                  <p><a href="https://github.com/jacob-ebey">jacob-ebey</a> developed <a href="https://github.com/jacob-ebey/DigitimateSharp">DigitimateSharp</a>.</p>
-                  <p>DigitimateSharp is avaliable on NuGet <a href="">here</a> or the NuGet Package Manager or by running the folling command in the Package Manager Console</p>
-                  <p>
-                    <pre>Install-Package DigitimateSharp</pre>
-                  </p>
-                </li>
+                */}
                 <li>
                   <h5>Node/io.js</h5>
                   <p>
@@ -416,6 +422,14 @@ Digitimate.checkCodeAsync({\n\
                           &nbsp;&nbsp;&nbsp;&nbsp;{"}"}<br />
                         &nbsp;&nbsp;{"}"});<br />
                     </pre>
+                  </p>
+                </li>
+                <li>
+                  <h5>C#</h5>
+                  <p><a href="https://github.com/jacob-ebey">jacob-ebey</a> developed <a href="https://github.com/jacob-ebey/DigitimateSharp">DigitimateSharp</a>.</p>
+                  <p>DigitimateSharp is avaliable on NuGet <a href="">here</a> or the NuGet Package Manager or by running the folling command in the Package Manager Console</p>
+                  <p>
+                    <pre>Install-Package DigitimateSharp</pre>
                   </p>
                 </li>
                 <li>
