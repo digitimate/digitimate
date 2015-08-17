@@ -17,8 +17,8 @@ app = koa()
 app.name = 'Digitimate'
 app.proxy = true
 
-app.use(logger())
-app.use(gzip())
+app.use logger()
+app.use gzip()
 
 app.use (next) ->
   @state.config = secret

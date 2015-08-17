@@ -8,7 +8,7 @@ instapromise = require 'instapromise'
   isBoolean
   isNaN
   isString
-} = require 'lodash-node'
+} = require 'lodash'
 timeconstants = require 'timeconstants'
 util = require 'util'
 
