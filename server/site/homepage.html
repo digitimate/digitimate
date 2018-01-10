@@ -237,7 +237,7 @@
     render: function () {
       return (
         <div className="jumbotron">
-          <h1>Digitimate</h1>
+          <h1>Digitimate (sunsetting)</h1>
           <h3>The legitimately easiest way to verify user{"'"}s mobile numbers via SMS in two easy steps</h3>
         </div>
       );
@@ -248,6 +248,11 @@
     render: function () {
       return (
         <div>
+        <div className="row">
+          <h2>Note: Digitimate is sunsetting on July 9, 2018.</h2>
+          <p>If you're a developer using Digitimate, we will help you migrate to another SMS confirmation service by letting you export the data associated with the developer email address you used with Digitimate.</p>
+          <p>You either can run Digitimate yourself (the code will stay open-source on July 9), which requires Node.js, RethinkDB, and a Twilio account, or you can use another SMS confirmation service, such as building your own that connects to an SMS service like Twilio.</p>
+        </div>
         <div className="row">
           <h2>No signup required. Free. Open source.</h2>
           <p>You don{"'"}t need to create an account or signup anywhere to get started; just include your e-mail
